@@ -7,7 +7,10 @@ import {
   NavbarToggler,
   Collapse,
   NavItem,
+  Media,
+  
 } from "reactstrap";
+
 import { NavLink } from "react-router-dom";
 
 class Header extends Component {
