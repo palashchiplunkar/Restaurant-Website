@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Control, LocalForm, Errors } from "react-redux-form";
+import { Loading } from "./LoadingComponent";
 const maxLength = (len) => (val) => !val || val.length <= len;
 const minLength = (len) => (val) => val && val.length >= len;
 class CommentForm extends Component {
@@ -30,7 +31,14 @@ class CommentForm extends Component {
   }
 
   handleSubmit(values) {
-    alert("Current State is : " + JSON.stringify(values));
+    this.toggleModal();
+    // console.log(values.rating, values.name, values.comment);
+    this.props.addComment(
+      this.props.dishId,
+      values.rating,
+      values.name,
+      values.comment
+    );
   }
   toggleModal() {
     this.setState({
@@ -112,8 +120,7 @@ class CommentForm extends Component {
   }
 }
 
-function RenderComments({ comments }) {
-  //console.log(comments);
+function RenderComments({ comments, addComment, dishId }) {
   const eachcomment = comments.map((comment) => {
     return (
       <ul className='list-unstyled'>
@@ -133,7 +140,7 @@ function RenderComments({ comments }) {
     <div>
       <h4>Comments</h4>
       {eachcomment}
-      <CommentForm />
+      <CommentForm dishId={dishId} addComment={addComment} />
     </div>
   );
 }
@@ -152,7 +159,23 @@ function RenderDish({ dish }) {
   );
 }
 const Dishdetail = (props) => {
-  if (props.dish != null) {
+  if (props.isLoading) {
+    return (
+      <div className='container'>
+        <div className='row'>
+          <Loading />
+        </div>
+      </div>
+    );
+  } else if (props.errMess) {
+    return (
+      <div className='container'>
+        <div className='row'>
+          <h4>{props.errMess}</h4>
+        </div>
+      </div>
+    );
+  } else if (props.dish != null) {
     return (
       <div className='container'>
         <div className='row'>
@@ -171,7 +194,12 @@ const Dishdetail = (props) => {
         <div className='row'>
           <RenderDish dish={props.dish} />
           <div className='col-12 col-md-5 m-1'>
-            <RenderComments comments={props.comments} />
+            {/* {console.log("dish", props.addComment)} */}
+            <RenderComments
+              comments={props.comments}
+              addComment={props.addComment}
+              dishId={props.dish.id}
+            />
           </div>
         </div>
       </div>
