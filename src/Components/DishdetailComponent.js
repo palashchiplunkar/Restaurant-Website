@@ -18,6 +18,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Control, LocalForm, Errors } from "react-redux-form";
 import { Loading } from "./LoadingComponent";
+import { baseUrl } from "../shared/baseUrl";
 const maxLength = (len) => (val) => !val || val.length <= len;
 const minLength = (len) => (val) => val && val.length >= len;
 class CommentForm extends Component {
@@ -33,7 +34,7 @@ class CommentForm extends Component {
   handleSubmit(values) {
     this.toggleModal();
     // console.log(values.rating, values.name, values.comment);
-    this.props.addComment(
+    this.props.postComment(
       this.props.dishId,
       values.rating,
       values.name,
@@ -120,7 +121,7 @@ class CommentForm extends Component {
   }
 }
 
-function RenderComments({ comments, addComment, dishId }) {
+function RenderComments({ comments, postComment, dishId }) {
   const eachcomment = comments.map((comment) => {
     return (
       <ul className='list-unstyled'>
@@ -140,7 +141,7 @@ function RenderComments({ comments, addComment, dishId }) {
     <div>
       <h4>Comments</h4>
       {eachcomment}
-      <CommentForm dishId={dishId} addComment={addComment} />
+      <CommentForm dishId={dishId} postComment={postComment} />
     </div>
   );
 }
@@ -149,7 +150,7 @@ function RenderDish({ dish }) {
   return (
     <div className='col-12 col-md-5 m-1'>
       <Card>
-        <CardImg top src={dish.image} alt={dish.name} />
+        <CardImg top src={baseUrl + dish.image} alt={dish.name} />
         <CardBody>
           <CardTitle>{dish.name}</CardTitle>
           <CardText>{dish.description}</CardText>
@@ -197,7 +198,7 @@ const Dishdetail = (props) => {
             {/* {console.log("dish", props.addComment)} */}
             <RenderComments
               comments={props.comments}
-              addComment={props.addComment}
+              postComment={props.postComment}
               dishId={props.dish.id}
             />
           </div>
