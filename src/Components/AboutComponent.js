@@ -8,23 +8,31 @@ import {
   Media,
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import { baseUrl } from "../shared/baseUrl";
+import { FadeTransform, Fade, Stagger } from "react-animation-components";
 
 function RenderLeader({ leaders }) {
   const eachLeader = leaders.map((leader) => {
     return (
-      <Media className='mt-5'>
-        <Media left>
-          <img src={leader.image} alt={leader.name} />
+      <Fade in>
+        <Media className='mt-5'>
+          <Media left>
+            <img src={baseUrl + leader.image} alt={leader.name} />
+          </Media>
+          <Media body className='ml-5'>
+            <Media heading>{leader.name}</Media>
+            <Media>{leader.designation}</Media>
+            <Media className='mt-3'>{leader.description}</Media>
+          </Media>
         </Media>
-        <Media body className='ml-5'>
-          <Media heading>{leader.name}</Media>
-          <Media>{leader.designation}</Media>
-          <Media className='mt-3'>{leader.description}</Media>
-        </Media>
-      </Media>
+      </Fade>
     );
   });
-  return <div className='container'>{eachLeader}</div>;
+  return (
+    <div className='container'>
+      <Stagger in>{eachLeader}</Stagger>
+    </div>
+  );
 }
 
 function About(props) {
